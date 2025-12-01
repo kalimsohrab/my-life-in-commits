@@ -2,21 +2,25 @@ name: Daily Streak Commit
 
 on:
   schedule:
-    - cron: '30 19 * * *'    # هر روز ساعت ۲۳:۰۰ به وقت ایران (UTC+3:30)
+    - cron: '30 19 * * *'    # هر روز ساعت ۲۳:۰۰ ایران
   workflow_dispatch:
 
 jobs:
   commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # این قسمت اضافه شد
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Daily commit برای استریک
         run: |
-          echo "$(date '+%Y-%m-%d %H:%M:%S') - استریک زنده است 🔥" >> streak.txt
+          echo "$(date '+%Y-%m-%d %H:%M:%S') - استریک زنده است" >> streak.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add streak.txt
-          git commit -m "daily streak: $(date '+%Y-%m-%d') 🔥"
+          git commit -m "daily streak: $(date '+%Y-%m-%d')"
           git push
